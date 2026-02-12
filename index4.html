@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chat OutlineMate - Brutalism</title>
+  <meta name="description" content="为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航，快速回溯，精准定位每一条消息。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="static/icons/icon128.png" type="image/png">
+  <style>
+/* =============================================
+   Brutalism Style - index4.html
+   Font: Space Grotesk (heading) + DM Sans (body)
+   Raw, bold, high contrast, sharp corners
+   ============================================= */
+:root {
+  --font-h: 'Space Grotesk', monospace, sans-serif;
+  --font-b: 'DM Sans', sans-serif;
+  --bg: #fffef5;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-sec: #3d3d5c;
+  --text-muted: #8888aa;
+  --primary: #6366f1;
+  --cta: #10b981;
+  --accent: #ff5252;
+  --border: #1a1a2e;
+  --border-w: 3px;
+  --shadow: 6px 6px 0 #1a1a2e;
+  --shadow-hover: 8px 8px 0 #1a1a2e;
+  --max-w: 1140px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+button{font-family:inherit;border:none;background:none;cursor:pointer}
+
+.container{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.section-header{text-align:center;margin-bottom:56px}
+.section-tag{display:inline-block;font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--card-bg);background:var(--text);padding:6px 16px;margin-bottom:16px;border:var(--border-w) solid var(--border)}
+.section-title{font-family:var(--font-h);font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px}
+.section-desc{font-size:17px;color:var(--text-sec);max-width:540px;margin:0 auto;line-height:1.7}
+
+/* Navbar — thick border, no radius */
+.navbar{position:fixed;top:12px;left:12px;right:12px;z-index:50;background:var(--bg);border:var(--border-w) solid var(--border);box-shadow:4px 4px 0 var(--border);transition:box-shadow 0.1s}
+.navbar.scrolled{box-shadow:2px 2px 0 var(--border)}
+.navbar-inner{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px}
+.navbar-brand{display:flex;align-items:center;gap:10px}
+.brand-text{font-family:var(--font-h);font-size:18px;font-weight:700;letter-spacing:-0.02em}
+.navbar-links{display:flex;align-items:center;gap:2px}
+.nav-link{font-family:var(--font-h);font-size:14px;font-weight:600;color:var(--text-sec);padding:6px 12px;border:2px solid transparent;transition:border-color 0.1s;cursor:pointer}
+.nav-link:hover{border-color:var(--border);background:var(--bg)}
+.navbar-actions{display:flex;align-items:center;gap:8px}
+
+/* Buttons — brutal style */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-h);font-weight:700;cursor:pointer;white-space:nowrap;border:var(--border-w) solid var(--border);transition:transform 0.1s,box-shadow 0.1s}
+.btn-sm{font-size:13px;padding:6px 16px}
+.btn-lg{font-size:16px;padding:14px 32px}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-hover)}
+.btn-primary:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--border)}
+.btn-cta{background:var(--cta);color:#fff;box-shadow:var(--shadow)}
+.btn-cta:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-hover)}
+.btn-cta:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--border)}
+.btn-ghost{color:var(--text);background:var(--card-bg);box-shadow:var(--shadow)}
+.btn-ghost:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-hover)}
+
+/* Hero */
+.hero{position:relative;padding:160px 0 100px;text-align:center}
+.hero-inner{display:flex;flex-direction:column;align-items:center}
+.hero-badge{display:inline-block;font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#fff;background:var(--accent);border:var(--border-w) solid var(--border);padding:5px 16px;margin-bottom:28px;box-shadow:3px 3px 0 var(--border)}
+.hero-title{font-family:var(--font-h);font-size:clamp(42px,7vw,72px);font-weight:700;line-height:1.05;letter-spacing:-0.03em;margin-bottom:20px}
+.text-gradient{color:var(--primary);-webkit-text-stroke:0}
+.hero-desc{font-size:18px;color:var(--text-sec);line-height:1.7;margin-bottom:36px;max-width:520px}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+
+/* Stats — brutal boxes */
+.hero-stats-row{display:flex;gap:0}
+.stat-card{display:flex;flex-direction:column;align-items:center;gap:2px;padding:20px 36px;background:var(--card-bg);border:var(--border-w) solid var(--border);min-width:140px;margin-left:-3px}
+.stat-card:first-child{margin-left:0}
+.stat-number{font-family:var(--font-h);font-size:30px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+</style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="container navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="navbar-brand">
+        <img src="static/icons/icon48.png" alt="OutlineMate Logo" width="32" height="32">
+        <span class="brand-text">OutlineMate</span>
+      </a>
+      <div class="navbar-links">
+        <a href="#features" class="nav-link">功能特性</a>
+        <a href="#platforms" class="nav-link">支持平台</a>
+        <a href="#screenshots" class="nav-link">使用截图</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-primary btn-sm">立即安装</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <div class="hero-badge">Chrome 浏览器扩展</div>
+      <h1 class="hero-title">
+        <span>AI 对话，</span><span class="text-gradient">一目了然</span>
+      </h1>
+      <p class="hero-desc">为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航。快速回溯历史消息，精准定位每一轮对话。</p>
+      <div class="hero-actions">
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-cta btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          免费安装
+        </a>
+        <a href="#features" class="btn btn-ghost btn-lg">
+          了解更多
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats-row">
+        <div class="stat-card"><span class="stat-number">5</span><span class="stat-label">支持平台</span></div>
+        <div class="stat-card"><span class="stat-number">2</span><span class="stat-label">语言支持</span></div>
+        <div class="stat-card"><span class="stat-number">100%</span><span class="stat-label">完全免费</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features" style="padding:100px 0">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">核心功能</span>
+        <h2 class="section-title">让每一轮对话都触手可及</h2>
+        <p class="section-desc">无需翻阅冗长的聊天记录，侧边栏大纲帮你一键直达任意消息。</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+          <h3 class="f-name">对话大纲导航</h3>
+          <p class="f-desc">自动提取每轮用户提问，生成可点击的侧边栏大纲，快速跳转到任意对话位置。</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3 class="f-name">AI 回复预览</h3>
+          <p class="f-desc">在大纲中显示 AI 回复摘要，无需展开即可快速了解每轮对话的核心内容。</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+          <h3 class="f-name">深色模式适配</h3>
+          <p class="f-desc">自动检测页面主题，无缝适配深色与浅色模式，保持视觉一致性。</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h3 class="f-name">中英双语</h3>
+          <p class="f-desc">支持简体中文和英文界面，自动跟随浏览器语言设置，也可手动切换。</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <h3 class="f-name">键盘导航</h3>
+          <p class="f-desc">完整的键盘快捷键支持，使用方向键、Home/End 键快速浏览大纲列表。</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3 class="f-name">隐私安全</h3>
+          <p class="f-desc">纯本地运行，不收集任何数据，不发送任何网络请求。你的对话只属于你。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms -->
+  <section id="platforms" style="padding:100px 0">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">广泛兼容</span>
+        <h2 class="section-title">支持主流 AI 对话平台</h2>
+        <p class="section-desc">一个插件，覆盖你常用的所有 AI 助手。</p>
+      </div>
+      <div style="display:flex;justify-content:center;gap:0;flex-wrap:wrap">
+        <div class="p-card"><div class="p-logo"><img src="static/logo/openai.png" alt="ChatGPT" width="32" height="32"></div><span class="p-name">ChatGPT</span></div>
+        <div class="p-card"><div class="p-logo"><img src="static/logo/gemini.png" alt="Gemini" width="32" height="32"></div><span class="p-name">Gemini</span></div>
+        <div class="p-card"><div class="p-logo"><img src="static/logo/豆包.png" alt="豆包" width="32" height="32"></div><span class="p-name">豆包</span></div>
+        <div class="p-card"><div class="p-logo"><img src="static/logo/月之暗面.png" alt="Kimi" width="32" height="32"></div><span class="p-name">Kimi</span></div>
+        <div class="p-card"><div class="p-logo"><img src="static/logo/通义千问.png" alt="通义千问" width="32" height="32"></div><span class="p-name">通义千问</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section id="screenshots" style="padding:100px 0">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">使用截图</span>
+        <h2 class="section-title">看看它是如何工作的</h2>
+        <p class="section-desc">在不同 AI 平台上的实际使用效果。</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
+        <div class="sc-card"><img src="static/sc/1.png" alt="ChatGPT 上使用 OutlineMate" loading="lazy"><div class="sc-label">ChatGPT</div></div>
+        <div class="sc-card"><img src="static/sc/2.png" alt="Gemini 上使用 OutlineMate" loading="lazy"><div class="sc-label">Gemini</div></div>
+        <div class="sc-card"><img src="static/sc/3.png" alt="豆包上使用 OutlineMate" loading="lazy"><div class="sc-label">豆包</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:100px 0">
+    <div class="container">
+      <div style="text-align:center;padding:72px 40px;background:var(--primary);border:var(--border-w) solid var(--border);box-shadow:8px 8px 0 var(--border)">
+        <h2 style="font-family:var(--font-h);font-size:clamp(24px,3.5vw,38px);font-weight:700;color:#fff;margin-bottom:12px">准备好提升你的 AI 对话体验了吗？</h2>
+        <p style="font-size:17px;color:rgba(255,255,255,0.8);margin-bottom:32px">免费安装 OutlineMate，让每一轮 AI 对话都井井有条。</p>
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-lg" style="background:#fff;color:var(--text);box-shadow:var(--shadow)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+          Chrome 应用商店安装
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding:32px 0;border-top:var(--border-w) solid var(--border)">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-h);font-weight:700;font-size:15px">
+        <img src="static/icons/icon48.png" alt="OutlineMate Logo" width="24" height="24">
+        <span>OutlineMate</span>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted)">&copy; 2026 AI Chat OutlineMate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button id="lightboxClose" aria-label="Close" style="position:absolute;top:20px;right:20px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);color:#fff;border:2px solid #fff;cursor:pointer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <style>
+  /* Feature cards — brutal grid */
+  .f-card{background:var(--card-bg);border:var(--border-w) solid var(--border);padding:32px 28px;margin-left:-3px;margin-top:-3px;transition:background 0.1s}
+  .f-card:hover{background:#f0f0ff}
+  .f-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:var(--primary);color:#fff;border:var(--border-w) solid var(--border);margin-bottom:18px}
+  .f-name{font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:8px}
+  .f-desc{font-size:14px;color:var(--text-sec);line-height:1.7}
+
+  /* Platform cards */
+  .p-card{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 40px;background:var(--card-bg);border:var(--border-w) solid var(--border);margin-left:-3px;min-width:140px;cursor:pointer;transition:background 0.1s}
+  .p-card:hover{background:#f0fff4}
+  .p-logo{width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:#f5f3ff;border:2px solid var(--border);overflow:hidden}
+  .p-logo img{width:32px;height:32px;object-fit:contain}
+  .p-name{font-family:var(--font-h);font-size:15px;font-weight:600}
+
+  /* Screenshot cards */
+  .sc-card{position:relative;overflow:hidden;border:var(--border-w) solid var(--border);margin-left:-3px;cursor:pointer;transition:transform 0.1s}
+  .sc-card:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow)}
+  .sc-card img{width:100%;display:block}
+  .sc-label{position:absolute;bottom:10px;left:10px;font-family:var(--font-h);font-size:12px;font-weight:700;color:#fff;background:var(--text);padding:4px 12px;border:2px solid var(--border)}
+
+  /* Lightbox */
+  .lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(26,26,46,0.9);opacity:0;visibility:hidden;transition:opacity 0.2s,visibility 0.2s;cursor:zoom-out}
+  .lightbox.active{opacity:1;visibility:visible}
+  .lightbox img{max-width:90vw;max-height:90vh;border:var(--border-w) solid #fff;box-shadow:10px 10px 0 rgba(0,0,0,0.5);transform:scale(0.95);transition:transform 0.2s}
+  .lightbox.active img{transform:scale(1)}
+
+  /* Scroll animation */
+  .fade-up{opacity:0;transform:translateY(20px);transition:all 0.4s ease}
+  .fade-up.visible{opacity:1;transform:translateY(0)}
+
+  /* Responsive */
+  @media(max-width:1024px){
+    .features [style*="grid-template-columns"]{grid-template-columns:repeat(2,1fr)!important}
+    #screenshots [style*="grid-template-columns"]{grid-template-columns:repeat(2,1fr)!important}
+    #screenshots .sc-card:last-child{grid-column:1/-1;max-width:50%;margin:0 auto}
+  }
+  @media(max-width:768px){
+    .navbar-links{display:none}
+    .hero{padding:130px 0 72px}
+    .hero-title{font-size:clamp(34px,9vw,52px)}
+    .hero-stats-row{flex-direction:column;gap:0;width:100%;max-width:320px}
+    .stat-card{flex-direction:row;justify-content:center;gap:12px;padding:14px 20px;min-width:0;margin-left:0;margin-top:-3px}
+    .stat-card:first-child{margin-top:0}
+    .features [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+    .f-card{margin-left:0;margin-top:-3px}.f-card:first-child{margin-top:0}
+    #platforms [style*="flex"]{flex-direction:column;align-items:center}
+    .p-card{margin-left:0;margin-top:-3px;width:100%;max-width:320px}.p-card:first-child{margin-top:0}
+    #screenshots [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+    .sc-card{margin-left:0;margin-top:-3px}.sc-card:first-child{margin-top:0}
+    #screenshots .sc-card:last-child{max-width:100%}
+  }
+  @media(max-width:480px){
+    .container{padding:0 16px}
+    .navbar{top:8px;left:8px;right:8px}
+    .hero-actions{flex-direction:column;align-items:stretch}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0.01ms!important}html{scroll-behavior:auto}.fade-up{opacity:1;transform:none}}
+  </style>
+
+  <script>
+  (function(){
+    'use strict';
+    var navbar=document.getElementById('navbar');
+    window.addEventListener('scroll',function(){navbar.classList.toggle('scrolled',window.scrollY>20)},{passive:true});
+    var targets=document.querySelectorAll('.f-card,.p-card,.sc-card,.section-header,.stat-card');
+    targets.forEach(function(el){el.classList.add('fade-up')});
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    targets.forEach(function(el){obs.observe(el)});
+    var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
+    document.querySelectorAll('.sc-card img').forEach(function(img){img.style.cursor='zoom-in';img.addEventListener('click',function(e){e.stopPropagation();lbImg.src=img.src;lbImg.alt=img.alt;lb.classList.add('active');document.body.style.overflow='hidden'})});
+    function closeLb(){lb.classList.remove('active');document.body.style.overflow=''}
+    lb.addEventListener('click',closeLb);document.getElementById('lightboxClose').addEventListener('click',closeLb);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('active'))closeLb()});
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+  })();
+  </script>
+</body>
+</html>

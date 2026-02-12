@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chat OutlineMate - Glassmorphism</title>
+  <meta name="description" content="为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航，快速回溯，精准定位每一条消息。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="static/icons/icon128.png" type="image/png">
+  <style>
+/* =============================================
+   Glassmorphism Style - index2.html
+   Font: Plus Jakarta Sans | Indigo + Emerald
+   ============================================= */
+:root {
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --bg: #0f0b2e;
+  --bg-alt: #130e35;
+  --glass: rgba(255,255,255,0.06);
+  --glass-hover: rgba(255,255,255,0.1);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-border-hover: rgba(255,255,255,0.22);
+  --text: #f0eeff;
+  --text-sec: #a5a0d0;
+  --text-muted: #6b65a0;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-light: rgba(99,102,241,0.12);
+  --cta: #10b981;
+  --cta-hover: #34d399;
+  --grad1: #6366f1;
+  --grad2: #a78bfa;
+  --glow: rgba(99,102,241,0.15);
+  --glow-strong: rgba(99,102,241,0.25);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xl: 24px;
+  --transition: 200ms ease;
+  --max-w: 1200px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+button{font-family:inherit;border:none;background:none;cursor:pointer}
+
+.container{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.section-header{text-align:center;margin-bottom:56px}
+.section-tag{display:inline-block;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--primary);background:var(--primary-light);padding:6px 16px;border-radius:100px;margin-bottom:16px;border:1px solid rgba(99,102,241,0.2)}
+.section-title{font-size:clamp(28px,4vw,40px);font-weight:800;line-height:1.2;letter-spacing:-0.02em;margin-bottom:12px}
+.section-desc{font-size:17px;color:var(--text-sec);max-width:560px;margin:0 auto;line-height:1.7}
+
+/* Animated background orbs */
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.4;animation:orbFloat 20s ease-in-out infinite}
+.orb-1{width:500px;height:500px;background:radial-gradient(circle,#6366f1,transparent);top:-10%;left:-5%;animation-delay:0s}
+.orb-2{width:400px;height:400px;background:radial-gradient(circle,#a78bfa,transparent);top:40%;right:-8%;animation-delay:-7s}
+.orb-3{width:350px;height:350px;background:radial-gradient(circle,#10b981,transparent);bottom:-5%;left:30%;animation-delay:-14s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-40px)}66%{transform:translate(-20px,30px)}}
+
+/* Navbar */
+.navbar{position:fixed;top:12px;left:12px;right:12px;z-index:50;background:rgba(15,11,46,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-border);border-radius:var(--radius);transition:box-shadow 0.3s ease}
+.navbar.scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.navbar-inner{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px}
+.navbar-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-text{font-size:17px;font-weight:700;letter-spacing:-0.01em}
+.navbar-links{display:flex;align-items:center;gap:4px}
+.nav-link{font-size:14px;font-weight:500;color:var(--text-sec);padding:6px 14px;border-radius:var(--radius-sm);transition:color var(--transition),background var(--transition);cursor:pointer}
+.nav-link:hover{color:var(--text);background:var(--primary-light)}
+.navbar-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);transition:all var(--transition);cursor:pointer;white-space:nowrap}
+.btn-sm{font-size:13px;padding:7px 16px}
+.btn-lg{font-size:16px;padding:14px 32px;border-radius:var(--radius)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 24px var(--glow-strong)}
+.btn-cta{background:var(--cta);color:#fff}
+.btn-cta:hover{background:var(--cta-hover);transform:translateY(-1px);box-shadow:0 4px 24px rgba(16,185,129,0.3)}
+.btn-ghost{color:var(--text-sec);background:transparent;border:1px solid var(--glass-border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--glass-border-hover);background:var(--glass)}
+.btn-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:var(--radius-sm);color:var(--text-sec);transition:color var(--transition),background var(--transition)}
+.btn-icon:hover{color:var(--text);background:var(--primary-light)}
+
+/* Hero */
+.hero{position:relative;padding:160px 0 100px;text-align:center;z-index:1}
+.hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+.hero-badge{display:inline-flex;font-size:13px;font-weight:600;color:var(--primary);background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(12px);padding:6px 18px;border-radius:100px;margin-bottom:28px}
+.hero-title{font-size:clamp(40px,6vw,68px);font-weight:800;line-height:1.08;letter-spacing:-0.03em;margin-bottom:20px}
+.text-gradient{background:linear-gradient(135deg,var(--grad1),var(--grad2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-size:18px;color:var(--text-sec);line-height:1.7;margin-bottom:36px;max-width:540px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+
+/* Glass Stats */
+.hero-stats-row{display:flex;gap:16px}
+.stat-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px 40px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius);min-width:140px;transition:border-color 0.3s ease,box-shadow 0.3s ease}
+.stat-card:hover{border-color:var(--glass-border-hover);box-shadow:0 0 30px var(--glow)}
+.stat-number{font-size:28px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,var(--grad1),var(--grad2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:13px;color:var(--text-muted);font-weight:500}
+
+/* Features */
+.features{padding:100px 0;position:relative;z-index:1}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius);padding:32px 28px;transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s ease;cursor:default}
+.feature-card:hover{border-color:var(--glass-border-hover);box-shadow:0 8px 40px var(--glow),inset 0 1px 0 rgba(255,255,255,0.06);transform:translateY(-4px)}
+.feature-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);margin-bottom:20px}
+.feature-name{font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em}
+.feature-desc-text{font-size:14px;color:var(--text-sec);line-height:1.7}
+
+/* Platforms */
+.platforms{padding:100px 0;z-index:1;position:relative}
+.platforms-grid{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.platform-card{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 40px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius);transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s ease;min-width:140px;cursor:pointer}
+.platform-card:hover{border-color:var(--glass-border-hover);box-shadow:0 8px 40px var(--glow);transform:translateY(-3px)}
+.platform-logo{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--primary-light);overflow:hidden}
+.platform-logo img{width:32px;height:32px;object-fit:contain}
+.platform-name{font-size:15px;font-weight:600}
+
+/* Screenshots */
+.screenshots{padding:100px 0;z-index:1;position:relative}
+.screenshots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.screenshot-card{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(8px);transition:transform 0.3s ease,box-shadow 0.3s ease;cursor:pointer}
+.screenshot-card:hover{box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 40px var(--glow);transform:translateY(-4px)}
+.screenshot-card img{width:100%;display:block;transition:transform 0.35s ease}
+.screenshot-card:hover img{transform:scale(1.02)}
+.screenshot-label{position:absolute;bottom:12px;left:12px;font-size:12px;font-weight:600;color:#fff;background:rgba(99,102,241,0.6);backdrop-filter:blur(8px);padding:4px 12px;border-radius:100px}
+
+/* CTA */
+.install-cta{padding:100px 0;z-index:1;position:relative}
+.cta-card{position:relative;text-align:center;padding:72px 40px;border-radius:var(--radius-xl);background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);overflow:hidden}
+.cta-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,var(--glow-strong) 0%,transparent 70%);pointer-events:none}
+.cta-title{font-size:clamp(24px,3.5vw,36px);font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;position:relative}
+.cta-desc{font-size:17px;color:var(--text-sec);margin-bottom:32px;position:relative}
+.cta-card .btn{position:relative}
+
+/* Footer */
+.footer{padding:32px 0;border-top:1px solid var(--glass-border);z-index:1;position:relative}
+.footer-inner{display:flex;align-items:center;justify-content:space-between}
+.footer-brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
+.footer-copy{font-size:13px;color:var(--text-muted)}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;cursor:zoom-out}
+.lightbox.active{opacity:1;visibility:visible}
+.lightbox-img{max-width:90vw;max-height:90vh;border-radius:var(--radius);box-shadow:0 20px 80px rgba(0,0,0,0.5);transform:scale(0.92);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.lightbox.active .lightbox-img{transform:scale(1)}
+.lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:background 0.2s ease}
+.lightbox-close:hover{background:rgba(255,255,255,0.2)}
+
+/* Scroll Animations */
+.fade-up{opacity:0;transform:translateY(24px);transition:all 0.6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:1024px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .screenshots-grid{grid-template-columns:repeat(2,1fr)}
+  .screenshots-grid .screenshot-card:last-child{grid-column:1/-1;max-width:50%;margin:0 auto}
+}
+@media(max-width:768px){
+  .navbar-links{display:none}
+  .hero{padding:130px 0 72px}
+  .hero-title{font-size:clamp(32px,8vw,48px)}
+  .hero-stats-row{flex-direction:column;gap:12px;width:100%;max-width:320px}
+  .stat-card{flex-direction:row;justify-content:center;gap:12px;padding:16px 24px;min-width:0}
+  .features-grid{grid-template-columns:1fr}
+  .platforms-grid{gap:12px}
+  .platform-card{padding:24px 28px;min-width:120px}
+  .screenshots-grid{grid-template-columns:1fr}
+  .screenshots-grid .screenshot-card:last-child{max-width:100%}
+  .cta-card{padding:48px 24px}
+  .footer-inner{flex-direction:column;gap:12px;text-align:center}
+}
+@media(max-width:480px){
+  .container{padding:0 16px}
+  .navbar{top:8px;left:8px;right:8px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:0.01ms!important;animation-duration:0.01ms!important}
+  html{scroll-behavior:auto}
+  .fade-up{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+  <!-- Background Orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="container navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="navbar-brand">
+        <img src="static/icons/icon48.png" alt="OutlineMate Logo" width="32" height="32">
+        <span class="brand-text">OutlineMate</span>
+      </a>
+      <div class="navbar-links">
+        <a href="#features" class="nav-link">功能特性</a>
+        <a href="#platforms" class="nav-link">支持平台</a>
+        <a href="#screenshots" class="nav-link">使用截图</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-primary btn-sm">立即安装</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <div class="hero-badge">Chrome 浏览器扩展</div>
+      <h1 class="hero-title">
+        <span>AI 对话，</span><span class="text-gradient">一目了然</span>
+      </h1>
+      <p class="hero-desc">为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航。快速回溯历史消息，精准定位每一轮对话。</p>
+      <div class="hero-actions">
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-cta btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          免费安装
+        </a>
+        <a href="#features" class="btn btn-ghost btn-lg">
+          了解更多
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats-row">
+        <div class="stat-card"><span class="stat-number">5</span><span class="stat-label">支持平台</span></div>
+        <div class="stat-card"><span class="stat-number">2</span><span class="stat-label">语言支持</span></div>
+        <div class="stat-card"><span class="stat-number">100%</span><span class="stat-label">完全免费</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">核心功能</span>
+        <h2 class="section-title">让每一轮对话都触手可及</h2>
+        <p class="section-desc">无需翻阅冗长的聊天记录，侧边栏大纲帮你一键直达任意消息。</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <h3 class="feature-name">对话大纲导航</h3>
+          <p class="feature-desc-text">自动提取每轮用户提问，生成可点击的侧边栏大纲，快速跳转到任意对话位置。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3 class="feature-name">AI 回复预览</h3>
+          <p class="feature-desc-text">在大纲中显示 AI 回复摘要，无需展开即可快速了解每轮对话的核心内容。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
+          <h3 class="feature-name">深色模式适配</h3>
+          <p class="feature-desc-text">自动检测页面主题，无缝适配深色与浅色模式，保持视觉一致性。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 class="feature-name">中英双语</h3>
+          <p class="feature-desc-text">支持简体中文和英文界面，自动跟随浏览器语言设置，也可手动切换。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-name">键盘导航</h3>
+          <p class="feature-desc-text">完整的键盘快捷键支持，使用方向键、Home/End 键快速浏览大纲列表。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-name">隐私安全</h3>
+          <p class="feature-desc-text">纯本地运行，不收集任何数据，不发送任何网络请求。你的对话只属于你。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms -->
+  <section class="platforms" id="platforms">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">广泛兼容</span>
+        <h2 class="section-title">支持主流 AI 对话平台</h2>
+        <p class="section-desc">一个插件，覆盖你常用的所有 AI 助手。</p>
+      </div>
+      <div class="platforms-grid">
+        <div class="platform-card"><div class="platform-logo"><img src="static/logo/openai.png" alt="ChatGPT" width="32" height="32"></div><span class="platform-name">ChatGPT</span></div>
+        <div class="platform-card"><div class="platform-logo"><img src="static/logo/gemini.png" alt="Gemini" width="32" height="32"></div><span class="platform-name">Gemini</span></div>
+        <div class="platform-card"><div class="platform-logo"><img src="static/logo/豆包.png" alt="豆包" width="32" height="32"></div><span class="platform-name">豆包</span></div>
+        <div class="platform-card"><div class="platform-logo"><img src="static/logo/月之暗面.png" alt="Kimi" width="32" height="32"></div><span class="platform-name">Kimi</span></div>
+        <div class="platform-card"><div class="platform-logo"><img src="static/logo/通义千问.png" alt="通义千问" width="32" height="32"></div><span class="platform-name">通义千问</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots" id="screenshots">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">使用截图</span>
+        <h2 class="section-title">看看它是如何工作的</h2>
+        <p class="section-desc">在不同 AI 平台上的实际使用效果。</p>
+      </div>
+      <div class="screenshots-grid" id="screenshotsGrid">
+        <div class="screenshot-card"><img src="static/sc/1.png" alt="ChatGPT 上使用 OutlineMate" loading="lazy"><div class="screenshot-label">ChatGPT</div></div>
+        <div class="screenshot-card"><img src="static/sc/2.png" alt="Gemini 上使用 OutlineMate" loading="lazy"><div class="screenshot-label">Gemini</div></div>
+        <div class="screenshot-card"><img src="static/sc/3.png" alt="豆包上使用 OutlineMate" loading="lazy"><div class="screenshot-label">豆包</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="install-cta" id="install">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-glow"></div>
+        <h2 class="cta-title">准备好提升你的 AI 对话体验了吗？</h2>
+        <p class="cta-desc">免费安装 OutlineMate，让每一轮 AI 对话都井井有条。</p>
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-cta btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+          Chrome 应用商店安装
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="static/icons/icon48.png" alt="OutlineMate Logo" width="24" height="24">
+        <span>OutlineMate</span>
+      </div>
+      <p class="footer-copy">&copy; 2026 AI Chat OutlineMate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+    // Navbar scroll
+    var navbar=document.getElementById('navbar');
+    window.addEventListener('scroll',function(){navbar.classList.toggle('scrolled',window.scrollY>20)},{passive:true});
+    // Scroll animations
+    var targets=document.querySelectorAll('.feature-card,.platform-card,.screenshot-card,.section-header,.cta-card,.stat-card');
+    targets.forEach(function(el){el.classList.add('fade-up')});
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    targets.forEach(function(el){obs.observe(el)});
+    // Lightbox
+    var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
+    document.querySelectorAll('.screenshot-card img').forEach(function(img){img.style.cursor='zoom-in';img.addEventListener('click',function(e){e.stopPropagation();lbImg.src=img.src;lbImg.alt=img.alt;lb.classList.add('active');document.body.style.overflow='hidden'})});
+    function closeLb(){lb.classList.remove('active');document.body.style.overflow=''}
+    lb.addEventListener('click',closeLb);
+    document.getElementById('lightboxClose').addEventListener('click',closeLb);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('active'))closeLb()});
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+  })();
+  </script>
+</body>
+</html>
