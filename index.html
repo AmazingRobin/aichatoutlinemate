@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chat OutlineMate - AI 对话大纲导航</title>
+  <meta name="description" content="为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航，快速回溯，精准定位每一条消息。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="../ai-chat-outlinemate/icons/icon128.png" type="image/png">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="container navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="navbar-brand">
+        <img src="../ai-chat-outlinemate/icons/icon48.png" alt="OutlineMate Logo" width="32" height="32">
+        <span class="brand-text">OutlineMate</span>
+      </a>
+      <div class="navbar-links">
+        <a href="#features" class="nav-link" data-i18n="nav_features">功能特性</a>
+        <a href="#platforms" class="nav-link" data-i18n="nav_platforms">支持平台</a>
+        <a href="#screenshots" class="nav-link" data-i18n="nav_screenshots">使用截图</a>
+      </div>
+      <div class="navbar-actions">
+        <button class="btn-icon" id="langToggle" aria-label="Switch Language" title="切换语言">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </button>
+        <button class="btn-icon" id="themeToggle" aria-label="Toggle Dark Mode" title="切换深色模式">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-ti" data-i18n="nav_install">立即安装</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-glow-top"></div>
+    <div class="hero-glow-bottom"></div>
+    <div class="container hero-inner">
+      <div class="hero-badge" data-i18n="hero_badge">Chrome 浏览器扩展</div>
+      <h1 class="hero-title">
+        <span data-i18n="hero_title_1">AI 对话，</span><span class="text-gradient" data-i18n="hero_title_2">一目了然</span>
+      </h1>
+      <p class="hero-desc" data-i18n="hero_desc">为 ChatGPT、Gemini、豆包、Kimi、通义千问生成对话大纲导航。快速回溯历史消息，精准定位每一轮对话。</p>
+      <div class="hero-actions">
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-primary btn-lg" data-i18n="hero_cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          免费安装
+        </a>
+        <a href="#features" class="btn btn-ghost btn-lg" data-i18n="hero_learn">
+          了解更多
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <!-- Stats Row -->
+      <div class="hero-stats-row">
+        <div class="stat-card">
+          <span class="stat-number">5</span>
+          <span class="stat-label" data-i18n="hero_stat_platforms">支持平台</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">2</span>
+          <span class="stat-label" data-i18n="hero_stat_langs">语言支持</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">100%</span>
+          <span class="stat-label" data-i18n="hero_stat_free">完全免费</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="features_tag">核心功能</span>
+        <h2 class="section-title" data-i18n="features_title">让每一轮对话都触手可及</h2>
+        <p class="section-desc" data-i18n="features_desc">无需翻阅冗长的聊天记录，侧边栏大纲帮你一键直达任意消息。</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_outline">对话大纲导航</h3>
+          <p class="feature-desc-text" data-i18n="feature_outline_desc">自动提取每轮用户提问，生成可点击的侧边栏大纲，快速跳转到任意对话位置。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_preview">AI 回复预览</h3>
+          <p class="feature-desc-text" data-i18n="feature_preview_desc">在大纲中显示 AI 回复摘要，无需展开即可快速了解每轮对话的核心内容。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_darkmode">深色模式适配</h3>
+          <p class="feature-desc-text" data-i18n="feature_darkmode_desc">自动检测页面主题，无缝适配深色与浅色模式，保持视觉一致性。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_i18n">中英双语</h3>
+          <p class="feature-desc-text" data-i18n="feature_i18n_desc">支持简体中文和英文界面，自动跟随浏览器语言设置，也可手动切换。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_keyboard">键盘导航</h3>
+          <p class="feature-desc-text" data-i18n="feature_keyboard_desc">完整的键盘快捷键支持，使用方向键、Home/End 键快速浏览大纲列表。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-name" data-i18n="feature_privacy">隐私安全</h3>
+          <p class="feature-desc-text" data-i18n="feature_privacy_desc">纯本地运行，不收集任何数据，不发送任何网络请求。你的对话只属于你。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms Section -->
+  <section class="platforms" id="platforms">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="platforms_tag">广泛兼容</span>
+        <h2 class="section-title" data-i18n="platforms_title">支持主流 AI 对话平台</h2>
+        <p class="section-desc" data-i18n="platforms_desc">一个插件，覆盖你常用的所有 AI 助手。</p>
+      </div>
+      <div class="platforms-grid">
+        <div class="platform-card">
+          <div class="platform-logo">
+            <img src="static/logo/openai.png" alt="ChatGPT" width="32" height="32">
+          </div>
+          <span class="platform-name">ChatGPT</span>
+        </div>
+        <div class="platform-card">
+          <div class="platform-logo">
+            <img src="static/logo/gemini.png" alt="Gemini" width="32" height="32">
+          </div>
+          <span class="platform-name">Gemini</span>
+        </div>
+        <div class="platform-card">
+          <div class="platform-logo">
+            <img src="static/logo/豆包.png" alt="豆包" width="32" height="32">
+          </div>
+          <span class="platform-name" data-i18n="platform_doubao">豆包</span>
+        </div>
+        <div class="platform-card">
+          <div class="platform-logo">
+            <img src="static/logo/月之暗面.png" alt="Kimi" width="32" height="32">
+          </div>
+          <span class="platform-name">Kimi</span>
+        </div>
+        <div class="platform-card">
+          <div class="platform-logo">
+            <img src="static/logo/通义千问.png" alt="通义千问" width="32" height="32">
+          </div>
+          <span class="platform-name" data-i18n="platform_qwen">通义千问</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="screenshots" id="screenshots">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="screenshots_tag">使用截图</span>
+        <h2 class="section-title" data-i18n="screenshots_title">看看它是如何工作的</h2>
+        <p class="section-desc" data-i18n="screenshots_desc">在不同 AI 平台上的实际使用效果。</p>
+      </div>
+      <div class="screenshots-grid" id="screenshotsGrid">
+        <div class="screenshot-card" data-cn="static/sc/1.png" data-en="static/sc/11.png">
+          <img src="static/sc/1.png" alt="ChatGPT 上使用 OutlineMate" loading="lazy">
+          <div class="screenshot-label">ChatGPT</div>
+        </div>
+        <div class="screenshot-card" data-cn="static/sc/2.png" data-en="static/sc/22.png">
+          <img src="static/sc/2.png" alt="Gemini 上使用 OutlineMate" loading="lazy">
+          <div class="screenshot-label">Gemini</div>
+        </div>
+        <div class="screenshot-card" data-cn="static/sc/3.png" data-en="static/sc/33.png">
+          <img src="static/sc/3.png" alt="豆包上使用 OutlineMate" loading="lazy">
+          <div class="screenshot-label" data-i18n="platform_doubao">豆包</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install CTA Section -->
+  <section class="install-cta" id="install">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-glow"></div>
+        <h2 class="cta-title" data-i18n="cta_title">准备好提升你的 AI 对话体验了吗？</h2>
+        <p class="cta-desc" data-i18n="cta_desc">免费安装 OutlineMate，让每一轮 AI 对话都井井有条。</p>
+        <a href="https://chromewebstore.google.com/detail/mfaehobnglhaopfeoacafaeaplpekmfg" target="_blank" rel="noopener" class="btn btn-primary btn-lg" data-i18n="cta_button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+          Chrome 应用商店安装
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="../ai-chat-outlinemate/icons/icon48.png" alt="OutlineMate Logo" width="24" height="24">
+        <span>OutlineMate</span>
+      </div>
+      <p class="footer-copy" data-i18n="footer_copy">&copy; 2026 AI Chat OutlineMate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  </div>
+
+  <script src="static/script.js"></script>
+</body>
+</html>
