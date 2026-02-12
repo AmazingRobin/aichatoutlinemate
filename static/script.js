@@ -86,7 +86,7 @@
       platform_qwen: 'Qwen',
       screenshots_tag: 'Screenshots',
       screenshots_title: 'See how it works',
-      screenshots_desc: 'Real usage across different AI platforms.',
+      screenshots_desc: 'Real usage across AI platforms.',
       cta_title: 'Ready to level up your AI chat experience?',
       cta_desc: 'Install OutlineMate for free and keep every AI conversation organized.',
       cta_button: 'Install from Chrome Web Store',
